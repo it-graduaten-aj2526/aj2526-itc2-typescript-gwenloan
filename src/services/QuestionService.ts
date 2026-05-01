@@ -24,6 +24,20 @@ export class QuestionService {
     }
 
     getQuestions = async (amount: number, category: number, difficulty: string) => {
+        //https://opentdb.com/api.php?amount=10&category=26&difficulty=medium
+
+        const getQuestionsUrl : string = this.baseUrl + `amount=${amount}&category=${category}&difficulty=${difficulty}`;
+
+        try {
+            const result = await fetch(getQuestionsUrl);
+
+            const {results} = await result.json();
+
+            return results as IApiQuestion[];
+        }
+        catch (error) {
+            console.error(error);
+        }
     }
 
     mapQuestionsToQuestionModel = (questions: IApiQuestion[]): Question[] => {
