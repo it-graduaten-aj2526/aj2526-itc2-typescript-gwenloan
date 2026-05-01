@@ -87,7 +87,7 @@ describe('Multiplayer Quiz Class', () => {
         expect(quiz.getCurrentPlayerName()).toBe('Alice');
         quiz.nextQuestion();
         expect(quiz.getCurrentPlayerName()).toBe('Bob');
-        expect(quiz.getCurrentQuestion()).toBe('What is 2+2?');
+        expect(quiz.getCurrentQuestion().question).toBe('What is 2+2?');
     });
 
     it('should end the quiz when all questions are asked', () => {

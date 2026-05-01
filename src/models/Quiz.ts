@@ -32,7 +32,7 @@ export class Quiz {
     
     public setQuestionMode(mode: QuestionMode) { this.questionMode = mode }
 
-    private updateTotalAmountOfQuestionToBeAsked( ) { return this.totalAmountOfQuestionToBeAsked = this.questions.length}
+    private updateTotalAmountOfQuestionToBeAsked( ) { return this.totalAmountOfQuestionToBeAsked = this.quizDuration*this.getAmountOfPlayers()}
 
     public addQuestion(q: Question) { return this.questions.push(q) }
 
@@ -49,29 +49,14 @@ export class Quiz {
         this.shuffleAnswersInQuestions();
     }
 
-    public testIfAnswerIsCorrect(answer: string) { return answer === this.questions[this.currentQuestionIndex].answers[this.currentQuestionIndex].text ? 
-        this.questions[this.currentQuestionIndex].answers[this.currentQuestionIndex].isCorrect = true : 
-        this.questions[this.currentQuestionIndex].answers[this.currentQuestionIndex].isCorrect = false
+    public testIfAnswerIsCorrect(answer: string) {     
+        let correctAnswer = this.questions[this.currentQuestionIndex].answers.find(a => a.isCorrect)!;
+
+        return correctAnswer.text === answer;
      }
 
     public nextQuestion() { 
         this.amountOfQuestionsAlreadyAsked++;
-        this.currentQuestionIndex++;
-
-        if(this.amountOfQuestionsAlreadyAsked > 1)
-        {
-            this.currentPlayerIndex++;
-
-            if(this.currentPlayerIndex === this.getAmountOfPlayers()+1)
-            {
-                this.currentPlayerIndex = 0
-            }
-        }
-
-        if(this.currentQuestionIndex === this.questions.length)
-        {
-            this.currentQuestionIndex = 0
-        }
 
         if(this.amountOfQuestionsAlreadyAsked > this.totalAmountOfQuestionToBeAsked)
         {
@@ -79,6 +64,14 @@ export class Quiz {
             return;
         }
 
+        this.currentQuestionIndex++;
+
+        if(this.amountOfQuestionsAlreadyAsked === this.quizDuration)
+        {
+            this.currentPlayerIndex++;
+            this.currentQuestionIndex = 0;
+            return;
+        }
     }
 
     private shuffleAnswersInQuestions() {return this.questions.forEach(question => question.answers.sort(() => Math.random()))}
