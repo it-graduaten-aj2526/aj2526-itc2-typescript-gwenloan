@@ -17,11 +17,16 @@ export class QuestionService {
 
         const getQuestionsUrl : string = this.baseUrl + `amount=${amount}&category=${category}&difficulty=${difficulty}`;
 
-        const result = await fetch(getQuestionsUrl);
+        try {
+            const result = await fetch(getQuestionsUrl);
 
-        const {results} = await result.json();
+            const {results} = await result.json();
 
-        return results as IApiQuestion[];
+            return results as IApiQuestion[];
+        }
+        catch (error) {
+            console.error(error);
+        }
     }
 
     mapQuestionsToQuestionModel = (questions: IApiQuestion[]): Question[] => {
