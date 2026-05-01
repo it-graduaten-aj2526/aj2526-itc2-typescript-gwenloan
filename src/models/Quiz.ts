@@ -8,53 +8,105 @@ export class Quiz {
     public questions: Question[] = [];
     public quizDuration: number = 0;
     public players: Player[] = [];
-    private currentQuestionIndex: number;
-    private currentPlayerIndex: number;
-    private gameMode: GameMode;
-    private questionMode: QuestionMode;
+    private currentQuestionIndex: number = 0;
+    private currentPlayerIndex: number = 0;
+    private gameMode: GameMode = GameMode.Single;
+    public questionMode: QuestionMode = QuestionMode.Custom;
     private numberOfPlayers: number = 1;
     private totalAmountOfQuestionToBeAsked: number = 0;
     private amountOfQuestionsAlreadyAsked: number = 0;
 
-    public constructor(duration: number) { }
+    public constructor(duration: number) { this.quizDuration = duration}
 
-    public getGameMode() { }
+    public getGameMode():GameMode { return this.gameMode; }
 
-    public getQuestionMode(): QuestionMode { return QuestionMode.Custom; }
+    public getQuestionMode(): QuestionMode { return this.questionMode; }
 
-    public getNumberOfPlayers(): number { return 0; }
+    public getNumberOfPlayers(): number { return this.numberOfPlayers; }
 
-    public getCurrentPlayerName(): string { return ""; }
+    public getCurrentPlayerName(): string { return this.players[this.currentPlayerIndex].name; }
 
-    public getCurrentQuestion() { }
+    public getCurrentQuestion():string { return this.questions[this.currentQuestionIndex].question; }
+    
+    public updateCurrentPlayerScore(amount: number) { this.players[this.currentPlayerIndex].score += amount}
+    
+    public setQuestionMode(mode: QuestionMode) { this.questionMode = mode }
 
-    public updateCurrentPlayerScore(amount: number) { }
+    private updateTotalAmountOfQuestionToBeAsked( ) { return this.totalAmountOfQuestionToBeAsked = this.questions.length}
 
-    public setQuestionMode(mode: QuestionMode) { }
+    public addQuestion(q: Question) { return this.questions.push(q) }
 
-    private updateTotalAmountOfQuestionToBeAsked() { }
+    public addPlayer(name: string) { return this.players.push(new Player(name))}
 
-    public addQuestion(q: Question) { }
+    private getAmountOfPlayers() { return this.numberOfPlayers }
 
-    public addPlayer(name: string) { }
+    public removePlayer(name : string) { return this.players = this.players.filter(player => name !== player.name )}
 
-    private getAmountOfPlayers() { }
+    public startQuiz() { 
+        this.isRunning = true;
+        
+        this.updateTotalAmountOfQuestionToBeAsked();
+        this.shuffleAnswersInQuestions();
+    }
 
-    public removePlayer(name: string) { }
+    public testIfAnswerIsCorrect(answer: string) { return answer === this.questions[this.currentQuestionIndex].answers[this.currentQuestionIndex].text ? 
+        this.questions[this.currentQuestionIndex].answers[this.currentQuestionIndex].isCorrect = true : 
+        this.questions[this.currentQuestionIndex].answers[this.currentQuestionIndex].isCorrect = false
+     }
 
-    public startQuiz() { }
+    public nextQuestion() { 
+        this.amountOfQuestionsAlreadyAsked++;
+        this.currentQuestionIndex++;
 
-    public testIfAnswerIsCorrect(answer: string) { }
+        if(this.amountOfQuestionsAlreadyAsked > 1)
+        {
+            this.currentPlayerIndex++;
 
-    public nextQuestion() { }
+            if(this.currentPlayerIndex === this.getAmountOfPlayers()+1)
+            {
+                this.currentPlayerIndex = 0
+            }
+        }
 
-    private shuffleAnswersInQuestions() { }
+        if(this.currentQuestionIndex === this.questions.length)
+        {
+            this.currentQuestionIndex = 0
+        }
 
-    private endQuiz() { }
+        if(this.amountOfQuestionsAlreadyAsked > this.totalAmountOfQuestionToBeAsked)
+        {
+            this.endQuiz();
+            return;
+        }
 
-    public setGameMode(gameMode: GameMode, amountOfPlayers: number) { }
+    }
 
-    public sortPlayersByScore() { }
+    private shuffleAnswersInQuestions() {return this.questions.forEach(question => question.answers.sort(() => Math.random()))}
 
-    public resetGame() { }
+    private endQuiz() { 
+        this.isRunning = false;
+        return this.sortPlayersByScore();
+    }
+
+    public setGameMode(gameMode: GameMode, amountOfPlayers: number) { 
+        this.gameMode = gameMode;
+        this.numberOfPlayers = (gameMode === GameMode.Single) ? 1 : amountOfPlayers
+    }
+
+    public sortPlayersByScore() { return this.players.sort((a, b) => b.score - a.score)}
+
+    public resetGame() { 
+        this.isRunning = false;
+        this.questions = [];
+        this.quizDuration= 0;
+        this.players = [];
+        this.currentQuestionIndex = 0;
+        this.currentPlayerIndex = 0;
+        this.gameMode = GameMode.Single;
+        this.questionMode = QuestionMode.Custom;
+        this.numberOfPlayers = 1;
+        this.totalAmountOfQuestionToBeAsked = 0;
+        this.amountOfQuestionsAlreadyAsked = 0;
+        this.players.forEach(player => player.score = 0)
+    }
 }
