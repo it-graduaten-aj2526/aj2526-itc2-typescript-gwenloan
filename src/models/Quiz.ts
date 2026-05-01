@@ -26,7 +26,7 @@ export class Quiz {
 
     public getCurrentPlayerName(): string { return this.players[this.currentPlayerIndex].name; }
 
-    public getCurrentQuestion():string { return this.questions[this.currentQuestionIndex].question; }
+    public getCurrentQuestion() { return this.questions[this.currentQuestionIndex]; }
     
     public updateCurrentPlayerScore(amount: number) { this.players[this.currentPlayerIndex].score += amount}
     

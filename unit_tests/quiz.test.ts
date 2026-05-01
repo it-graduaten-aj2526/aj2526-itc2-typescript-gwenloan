@@ -35,7 +35,7 @@ describe('Multiplayer Quiz Class', () => {
         expect(quiz.quizDuration).toBe(2);
         expect(quiz.isRunning).toBe(false);
         expect(quiz.getCurrentPlayerName()).toBe('Alice');
-        expect(quiz.getCurrentQuestion()).toBe('What is 2+2?');
+        expect(quiz.getCurrentQuestion().question).toBe('What is 2+2?');
     });
 
     it('should update the current player score correctly', () => {
