@@ -60,10 +60,30 @@ export class PlayersPage {
         }
     }
 
-    private validatePlayerName = (): boolean => {
-        return false;
+    private validatePlayerName = (name: string): boolean => {
+        if(quiz.players.find(p => p.name === name))
+        {
+            return false;
+        }
+        else if(getElementWrapper<HTMLInputElement>("#input-player").value === "" ||getElementWrapper<HTMLInputElement>("#input-player").value === undefined)
+        {
+            return false;
+        }
+
+        return true;
     }
 
     private addPlayer() {
+        let playerName = getElementWrapper<HTMLInputElement>("#input-player").value
+
+        if(this.validatePlayerName(playerName))
+        {
+            quiz.addPlayer(playerName)
+        }
+        else
+        {
+            displayAlert("Geef een geldige naam in")
+        }
+
     }
 }
