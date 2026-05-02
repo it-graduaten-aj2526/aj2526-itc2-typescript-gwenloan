@@ -65,6 +65,11 @@ export class HomePage {
                 displayAlert("Please enter a number");
                 return false;
             }
+
+            if(Number(inputAmountPlayers.value) <2) {
+                displayAlert("Please enter a number higher than 1");
+                return false;
+            }
         }
 
         if(inputAmountQuestions.value === '') {
@@ -74,6 +79,11 @@ export class HomePage {
 
         if(isNaN(Number(inputAmountQuestions.value))) {
             displayAlert("Please enter a number");
+            return false;
+        }
+
+        if(Number(inputAmountQuestions.value) <1) {
+            displayAlert("Please enter a number higher than 0");
             return false;
         }
 
