@@ -60,13 +60,20 @@ export class PlayersPage {
         }
     }
 
-    private validatePlayerName = (name: string): boolean => {
-        if(quiz.players.find(p => p.name === name))
+    private validatePlayerName = (): boolean => {
+        const playerName : HTMLInputElement = document.querySelector('#input-player')!;
+
+        if(quiz.players.find(p => p.name === playerName.value))
         {
+            displayAlert("Player name must be unique");
+
             return false;
         }
-        else if(getElementWrapper<HTMLInputElement>("#input-player").value === "" ||getElementWrapper<HTMLInputElement>("#input-player").value === undefined)
+
+        if(playerName.value === "" || playerName.value === undefined)
         {
+            displayAlert("Please enter a player name");
+
             return false;
         }
 
@@ -74,15 +81,23 @@ export class PlayersPage {
     }
 
     private addPlayer() {
-        let playerName = getElementWrapper<HTMLInputElement>("#input-player").value
+        let playerName : HTMLInputElement = document.querySelector('#input-player')!;
+        const addPlayerButton : HTMLButtonElement = document.querySelector('#btn-add-player')!;
+        const goToQuestionsButton : HTMLButtonElement = document.querySelector('#btn-go-to-questions')!;
 
-        if(this.validatePlayerName(playerName))
+        if(this.validatePlayerName())
         {
-            quiz.addPlayer(playerName)
+            quiz.addPlayer(playerName.value)
+
+            this.updatePlayerList();
+
+            playerName.value = "";
         }
-        else
+
+        if(quiz.players.length >= quiz.getNumberOfPlayers())
         {
-            displayAlert("Geef een geldige naam in")
+            addPlayerButton.disabled = true;
+            goToQuestionsButton.disabled = false;
         }
 
     }
