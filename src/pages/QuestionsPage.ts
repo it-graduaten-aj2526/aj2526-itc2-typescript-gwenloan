@@ -8,12 +8,35 @@ import Question from "../models/Question.ts";
 
 const questionService = new QuestionService();
 
+const fillCategories = async () => {
+    const select = getElementWrapper<HTMLSelectElement>('#input-category');
+    const categories = await questionService.getCategories() ?? [];
+
+    categories.forEach((c: ICategory) => {
+        const option = document.createElement("option");
+        option.value = c.id.toString();
+        option.text = c.name;
+        select.appendChild(option);
+    });
+}
+
+const fillDifficulty = async () => {
+    const select = getElementWrapper<HTMLSelectElement>('#input-difficulty');
+
+    Object.keys(Difficulty).forEach(key => {
+        const option = document.createElement("option");
+        option.value = key.toLowerCase();
+        option.text = key;
+        select.appendChild(option);
+    });
+};
+
 // language=HTML
 const apiModeHtml: string = `
     <h2>API questions</h2>
     <p>Configure the API for retrieving questions</p>
-    <select class="form-select" id="input-difficulty" data-testid="input-difficulty"></select>
-    <select class="form-select mt-2" id="input-category" data-testid="input-category"></select>
+    <select class="form-select" id="input-difficulty" data-testid="input-difficulty">${fillDifficulty()}</select>
+    <select class="form-select mt-2" id="input-category" data-testid="input-category">${fillCategories()}</select>
     <button id="btn-fetch-questions" class="btn btn-primary mt-2" data-testid="btn-fetch-questions">Fetch questions</button>`;
 
 // language=HTML
@@ -68,39 +91,18 @@ const customModeHtml: string = `
 
 //language=HTML
 const questionsHtml: string = `
-    <h2 class="mt-2">Confirmed questions <span id="question-counter" data-testid="question-counter">(0/0)</span></h2>
+    <h2 class="mt-2">Confirmed questions <span id="question-counter" data-testid="question-counter">(0/)</span></h2>
     <div id="questions" data-testid="questions">No questions to display</div>
 `;
-
-const fillCategories = async () => {
-    const select = getElementWrapper<HTMLSelectElement>("#input-category");
-    const categories = await questionService.getCategories();
-    console.log("Categories", categories)
-    categories.forEach((c: ICategory) => {
-        const option = document.createElement("option");
-        option.value = c.id.toString();
-        option.text = c.name;
-        select.appendChild(option);
-    });
-}
-
-const fillDifficulty = async () => {
-    const select = getElementWrapper<HTMLSelectElement>("#input-difficulty");
-    Object.keys(Difficulty).forEach(key => {
-        const option = document.createElement("option");
-        option.value = key.toLowerCase();
-        option.text = key;
-        select.appendChild(option);
-    });
-};
 
 export class QuestionsPage {
     private tempQuestion = new Question("");
 
     public constructor() {
+
     }
 
-    public init(contentElement: HTMLElement) {
+    public async init(contentElement: HTMLElement) {
         //language=HTML
         let htmlToShow = quiz.getQuestionMode() === QuestionMode.Api ? apiModeHtml : customModeHtml;
         const fullHtml = `
@@ -120,6 +122,25 @@ export class QuestionsPage {
                 </div>
             </div>
         `;
+        
         contentElement.innerHTML = fullHtml;
+
+        await fillCategories();
+        await fillDifficulty();
+
     }
+
+    private addQuestions()
+    {
+        let selectedDifficulty: string = "";
+        let selectedCategory: string = "";
+
+        getElementWrapper<HTMLButtonElement>('#input-difficulty').addEventListener("change", () => {selectedDifficulty = getElementWrapper<HTMLSelectElement>("#input-difficulty")!.value;});
+        getElementWrapper<HTMLButtonElement>('#input-category').addEventListener("change", () => {selectedCategory = getElementWrapper<HTMLSelectElement>("#input-category")!.value;});
+    
+        getElementWrapper<HTMLButtonElement>('#btn-fetch-questions').addEventListener("click", () => { questionService.getQuestions(quiz.quizDuration, Number(selectedCategory), selectedDifficulty)});
+        getElementWrapper<HTMLButtonElement>('#btn-fetch-questions').addEventListener("click", () => {console.log(selectedDifficulty,selectedCategory)});
+    }
+
+
 }
