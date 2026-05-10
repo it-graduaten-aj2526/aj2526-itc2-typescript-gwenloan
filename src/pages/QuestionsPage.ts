@@ -137,12 +137,35 @@ export class QuestionsPage {
         getElementWrapper<HTMLButtonElement>('#input-category').addEventListener("change", () => {selectedCategory = getElementWrapper<HTMLSelectElement>("#input-category")!.value;});
     
         getElementWrapper<HTMLButtonElement>('#btn-fetch-questions').addEventListener("click", async () => { 
-            const questions = await questionService.getQuestions(quiz.quizDuration, Number(selectedCategory), selectedDifficulty)
+            const questionsAsIApiQuestions = await questionService.getQuestions(quiz.quizDuration, Number(selectedCategory), selectedDifficulty) ?? [];
             const questionsArray = getElementWrapper<HTMLDivElement>('#questions');
+
+            //IApiQuestion[] naar Question[]
+            questionsAsIApiQuestions.forEach(q => {
+                let questionAsQuestion: Question = new Question(q.question);
+
+                questionAsQuestion.addAnswer({text: q.correct_answer, isCorrect: true})
+
+                q.incorrect_answers.forEach((answer) => {
+                    questionAsQuestion.addAnswer({text: answer, isCorrect: false})
+                })
+
+                quiz.addQuestion(questionAsQuestion);
+            })
+
+            let ul = document.createElement('ul');
 
             if(questionsArray !== null)
             {
-                questionsArray.innerHTML = questions!.map(p => `<p>${p.question}</p>`).join('')
+                questionsArray.innerText = "";
+
+                quiz.questions!.forEach(p => {
+                    let li = document.createElement('li');
+                    li.innerText = p.toString();
+                    ul.appendChild(li);
+                });
+
+                questionsArray.appendChild(ul);
             }
         });
 
