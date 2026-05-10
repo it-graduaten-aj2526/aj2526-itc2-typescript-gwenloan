@@ -145,5 +145,15 @@ export class QuestionsPage {
                 questionsArray.innerHTML = questions!.map(p => `<p>${p.question}</p>`).join('')
             }
         });
+
+        const startQuiz = getElementWrapper<HTMLButtonElement>('#btn-start-quiz')
+
+        enableEl(startQuiz)
+
+        startQuiz.addEventListener("click", async () => {
+            await quiz.startQuiz()
+
+            quizPage.init(getElementWrapper<HTMLDivElement>('#content'))
+        });
     }
 }
