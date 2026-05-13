@@ -1,5 +1,5 @@
 // language=HTML
-import { getElementWrapper } from "../utils";
+import { displayAlert, getElementWrapper } from "../utils";
 import { quiz, scoreboardPage } from "../globals.ts";
 
 const html: string = `
@@ -65,22 +65,30 @@ export class QuizPage {
         })
 
         quiz.testIfAnswerIsCorrect(selectedAnswer)
-        console.log(quiz.testIfAnswerIsCorrect(selectedAnswer))
 
         if(quiz.testIfAnswerIsCorrect(selectedAnswer))
         {
             quiz.updateCurrentPlayerScore(1)
         }
 
-        quiz.nextQuestion()
-        
-
-        if(quiz.isRunning === false)
+        if(selectedAnswer !== "")
         {
-            scoreboardPage.init(getElementWrapper<HTMLDivElement>('#content'))
+            quiz.nextQuestion()
+        
+            if(quiz.isRunning === false)
+            {
+                scoreboardPage.init(getElementWrapper<HTMLDivElement>('#content'))
+            }
+
+            this.updateCurrentQuestion()
+            this.updatePlayerName()
+            selectedAnswer = ""
+        }
+        else
+        {
+            displayAlert("Please select an answer")
         }
 
-        this.updateCurrentQuestion()
     }
 
     private updateCurrentQuestion() {

@@ -36,9 +36,13 @@ export class ScoreboardPage {
     private showScoreboard() {
         quiz.sortPlayersByScore()
 
-        for(const player in quiz.players)
-        {
-            getElementWrapper<HTMLOListElement>("#scoreboard").innerHTML = player
-        }
+        const scoreboard = getElementWrapper<HTMLOListElement>("#scoreboard")
+
+        quiz.players.forEach(player => {
+            const spelers = document.createElement('li')
+
+            spelers.innerHTML = player.name + ": " + player.score
+            scoreboard.appendChild(spelers)
+        });
     }
 }

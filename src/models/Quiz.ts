@@ -66,12 +66,19 @@ export class Quiz {
 
         this.currentQuestionIndex++;
 
-        if(this.amountOfQuestionsAlreadyAsked === this.quizDuration)
+        if(this.amountOfQuestionsAlreadyAsked % this.questions.length === 0)
         {
             this.currentPlayerIndex++;
             this.currentQuestionIndex = 0;
             return;
         }
+
+        if(this.currentQuestionIndex === this.questions.length -1)
+        {
+            this.currentQuestionIndex = 0;
+            return;
+        }
+
     }
 
     private shuffleAnswersInQuestions() {return this.questions.forEach(question => question.answers.sort(() => Math.random()))}
