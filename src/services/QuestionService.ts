@@ -13,7 +13,6 @@ export class QuestionService {
     getCategories = async () => {
         try {
             const result = await fetch(this.categoryUrl);
-
             const { trivia_categories } = await result.json();
 
             return trivia_categories as ICategory[];
