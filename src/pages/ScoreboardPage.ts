@@ -5,7 +5,7 @@ import { homePage, quiz } from "../globals.ts";
 const html: string = `
     <div class="row">
         <div class="col">
-            <p data-testid="intro">The quiz has ended. Here are the final scores:</p>
+            <p data-testid="intro">The quiz has ended.</p>
         </div>
     </div>
     <div class="row">
@@ -30,8 +30,20 @@ export class ScoreboardPage {
     }
 
     private restartGame() {
+        homePage.init(getElementWrapper<HTMLDivElement>('#content'))
+        quiz.resetGame()
     }
 
     private showScoreboard() {
+        quiz.sortPlayersByScore()
+
+        const scoreboard = getElementWrapper<HTMLOListElement>("#scoreboard")
+
+        quiz.players.forEach(player => {
+            const spelers = document.createElement('li')
+
+            spelers.innerHTML = player.name + ": " + player.score
+            scoreboard.appendChild(spelers)
+        });
     }
 }

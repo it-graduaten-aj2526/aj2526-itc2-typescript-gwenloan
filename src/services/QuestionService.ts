@@ -1,6 +1,5 @@
 import Question from "../models/Question";
 import { IApiQuestion } from "../types/interfaces/IApiQuestion.ts";
-import { displayAlert } from "../utils";
 import {ICategory} from "../types/interfaces/ICategory.ts";
 
 export class QuestionService {

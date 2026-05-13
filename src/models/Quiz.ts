@@ -45,6 +45,7 @@ export class Quiz {
     public startQuiz() { 
         this.isRunning = true;
         
+        this.players[this.currentPlayerIndex].isCurrent = true;
         this.updateTotalAmountOfQuestionToBeAsked();
         this.shuffleAnswersInQuestions();
     }
@@ -58,20 +59,23 @@ export class Quiz {
     public nextQuestion() { 
         this.amountOfQuestionsAlreadyAsked++;
 
-        if(this.amountOfQuestionsAlreadyAsked > this.totalAmountOfQuestionToBeAsked)
+        if(this.amountOfQuestionsAlreadyAsked >= this.totalAmountOfQuestionToBeAsked)
         {
             this.endQuiz();
             return;
         }
 
         this.currentQuestionIndex++;
+        this.totalAmountOfQuestionToBeAsked--;
 
-        if(this.amountOfQuestionsAlreadyAsked === this.quizDuration)
+        if(this.amountOfQuestionsAlreadyAsked % this.questions.length === 0)
         {
             this.currentPlayerIndex++;
             this.currentQuestionIndex = 0;
+            this.amountOfQuestionsAlreadyAsked = 0;
             return;
         }
+
     }
 
     private shuffleAnswersInQuestions() {return this.questions.forEach(question => question.answers.sort(() => Math.random()))}
