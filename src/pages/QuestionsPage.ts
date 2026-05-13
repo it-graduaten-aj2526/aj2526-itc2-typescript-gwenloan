@@ -5,7 +5,6 @@ import { ICategory } from "../types/interfaces/ICategory.ts";
 import { Difficulty } from "../types/enum/Difficulty.ts";
 import { disableEl, displayAlert, enableEl, getElementWrapper } from "../utils";
 import Question from "../models/Question.ts";
-import {c} from "vite/dist/node/types.d-aGj9QkWt";
 
 const questionService = new QuestionService();
 
@@ -147,7 +146,6 @@ export class QuestionsPage {
         getElementWrapper<HTMLButtonElement>('#btn-fetch-questions').addEventListener("click", async () => {
             const questionsAsIApiQuestions = await questionService.getQuestions(quiz.quizDuration, Number(selectedCategory), selectedDifficulty) ?? [];
 
-            //IApiQuestion[] naar Question[]
             questionsAsIApiQuestions.forEach(q => {
                 let questionAsQuestion: Question = new Question(q.question);
 
@@ -162,10 +160,7 @@ export class QuestionsPage {
 
             this.renderQuestions();
             this.updateQuestionCounter();
-
-            setTimeout(() => {
-                this.startQuiz();
-            }, 2000);
+            this.startQuiz();
         });
     }
 
@@ -205,7 +200,7 @@ export class QuestionsPage {
             let question = new Question("");
             const wordCount = inputQuestion.value.trim().split(/\s+/).length;
 
-            if(wordCount < 5) {
+            if(wordCount < 4) {
                 console.log(wordCount);
                 displayAlert("Question should contain at least 4 words");
                 return;
@@ -272,9 +267,6 @@ export class QuestionsPage {
     }
 
     private startQuiz() {
-        let quizQuestionsCount = 0;
-        quiz.questions.forEach(() => {quizQuestionsCount++})
-
         if(quiz.questions.length === quiz.quizDuration) {
             if(quiz.getQuestionMode() === QuestionMode.Api) {
                 const btnFetchQuestion = getElementWrapper<HTMLButtonElement>('#btn-fetch-questions');
