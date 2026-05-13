@@ -211,7 +211,7 @@ export class QuestionsPage {
                 return;
             }
 
-            if(arrayIncorrectAnswers.length< 1) {
+            if(arrayIncorrectAnswers.length< 2) {
                 displayAlert("Question should contain at least 2 incorrect answers");
                 return;
             }
