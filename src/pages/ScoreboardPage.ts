@@ -30,8 +30,15 @@ export class ScoreboardPage {
     }
 
     private restartGame() {
+        homePage.init(getElementWrapper<HTMLDivElement>('#content'))
     }
 
     private showScoreboard() {
+        quiz.sortPlayersByScore()
+
+        for(const player in quiz.players)
+        {
+            getElementWrapper<HTMLOListElement>("#scoreboard").innerHTML = player
+        }
     }
 }

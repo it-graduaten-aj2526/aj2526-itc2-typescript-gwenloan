@@ -46,20 +46,52 @@ export class QuizPage {
     }
 
     private updatePlayerName() {
+        let currentPlayerName = document.querySelector("#current-player-name")!;
+
+        currentPlayerName.innerHTML = quiz.getCurrentPlayerName();
     }
 
     private submitAnswer() {
+        let radioButtons = document.querySelectorAll("input.form-check-input")!;
+        let selectedAnswer = '';
+
+        radioButtons.forEach(radioButton => {
+        let x = radioButton as HTMLInputElement;
+
+            if(x.checked) 
+            {
+                selectedAnswer = x.value;
+            }
+        })
+
+        quiz.testIfAnswerIsCorrect(selectedAnswer)
+        console.log(quiz.testIfAnswerIsCorrect(selectedAnswer))
+
+        if(quiz.testIfAnswerIsCorrect(selectedAnswer))
+        {
+            quiz.updateCurrentPlayerScore(1)
+        }
+
+        quiz.nextQuestion()
+        
+
+        if(quiz.isRunning === false)
+        {
+            scoreboardPage.init(getElementWrapper<HTMLDivElement>('#content'))
+        }
+
+        this.updateCurrentQuestion()
     }
 
     private updateCurrentQuestion() {
         const currentQuestion = quiz.getCurrentQuestion();
-        // Show the current question
         getElementWrapper<HTMLHeadingElement>('#question').innerText = currentQuestion.question;
+
         const answers = currentQuestion.answers;
         const answerContainer = getElementWrapper<HTMLDivElement>('#answer-container');
-        // Clear previous answers
+
         answerContainer.innerHTML = "";
-        // Show all possible answers
+        
         answers.forEach((answer) => {
             // Create the holding div
             const formCheck = document.createElement("div");
