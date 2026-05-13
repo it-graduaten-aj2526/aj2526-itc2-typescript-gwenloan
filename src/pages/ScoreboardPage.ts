@@ -31,6 +31,7 @@ export class ScoreboardPage {
 
     private restartGame() {
         homePage.init(getElementWrapper<HTMLDivElement>('#content'))
+        quiz.resetGame()
     }
 
     private showScoreboard() {
