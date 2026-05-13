@@ -5,7 +5,7 @@ import { homePage, quiz } from "../globals.ts";
 const html: string = `
     <div class="row">
         <div class="col">
-            <p data-testid="intro">The quiz has ended. Here are the final scores:</p>
+            <p data-testid="intro">The quiz has ended.</p>
         </div>
     </div>
     <div class="row">

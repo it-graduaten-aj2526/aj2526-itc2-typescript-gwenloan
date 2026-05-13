@@ -59,7 +59,7 @@ export class Quiz {
     public nextQuestion() { 
         this.amountOfQuestionsAlreadyAsked++;
 
-        if(this.totalAmountOfQuestionToBeAsked === 0)
+        if(this.amountOfQuestionsAlreadyAsked >= this.totalAmountOfQuestionToBeAsked)
         {
             this.endQuiz();
             return;
