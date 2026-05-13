@@ -61,9 +61,44 @@ export class PlayersPage {
     }
 
     private validatePlayerName = (): boolean => {
-        return false;
+        const playerName : HTMLInputElement = document.querySelector('#input-player')!;
+
+        if(quiz.players.find(p => p.name === playerName.value))
+        {
+            displayAlert("Player name must be unique");
+
+            return false;
+        }
+
+        if(playerName.value === "" || playerName.value === undefined)
+        {
+            displayAlert("Please enter a player name");
+
+            return false;
+        }
+
+        return true;
     }
 
     private addPlayer() {
+        let playerName : HTMLInputElement = document.querySelector('#input-player')!;
+        const addPlayerButton : HTMLButtonElement = document.querySelector('#btn-add-player')!;
+        const goToQuestionsButton : HTMLButtonElement = document.querySelector('#btn-go-to-questions')!;
+
+        if(this.validatePlayerName())
+        {
+            quiz.addPlayer(playerName.value)
+
+            this.updatePlayerList();
+
+            playerName.value = "";
+        }
+
+        if(quiz.players.length >= quiz.getNumberOfPlayers())
+        {
+            addPlayerButton.disabled = true;
+            goToQuestionsButton.disabled = false;
+        }
+
     }
 }

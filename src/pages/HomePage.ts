@@ -52,7 +52,42 @@ export class HomePage {
     }
 
     private validateFields = (): boolean => {
-        return false;
+        const inputAmountPlayers : HTMLInputElement = document.querySelector('#input-amount-players')!;
+        const inputAmountQuestions : HTMLInputElement = document.querySelector('#input-question-amount')!;
+
+        if(getElementWrapper<HTMLInputElement>('#input-game-mode').checked) {
+            if(inputAmountPlayers.value === '') {
+                displayAlert("Please enter the amount of players");
+                return false;
+            }
+
+            if(isNaN(Number(inputAmountPlayers.value))) {
+                displayAlert("Please enter a number");
+                return false;
+            }
+
+            if(Number(inputAmountPlayers.value) <2) {
+                displayAlert("Please enter a number higher than 1");
+                return false;
+            }
+        }
+
+        if(inputAmountQuestions.value === '') {
+            displayAlert("Please enter the amount of questions");
+            return false;
+        }
+
+        if(isNaN(Number(inputAmountQuestions.value))) {
+            displayAlert("Please enter a number");
+            return false;
+        }
+
+        if(Number(inputAmountQuestions.value) <1) {
+            displayAlert("Please enter a number higher than 0");
+            return false;
+        }
+
+        return true;
     }
 
     private saveConfiguration = () => {
@@ -80,8 +115,30 @@ export class HomePage {
     }
 
     private toggleQuestionModeLabel = () => {
+        const questionModeLabel: HTMLElement = document.querySelector('#lbl-question-mode')!;
+
+        if(getElementWrapper<HTMLInputElement>('#input-question-mode')!.checked) {
+            questionModeLabel.innerText = 'API questions';
+        }
+        else {
+            questionModeLabel.innerText = 'Free input';
+        }
     }
 
     private toggleGameModeLabel = () => {
+        const gameModeLabel: HTMLElement = document.querySelector('#lbl-game-mode')!;
+        const inputAmountPlayers: HTMLElement = document.querySelector('#rowAmountPlayers')!;
+
+
+        if(getElementWrapper<HTMLInputElement>('#input-game-mode')!.checked) {
+            gameModeLabel.innerText = 'Multiplayer';
+
+            showEl(inputAmountPlayers);
+        }
+        else {
+            gameModeLabel.innerText = 'Single player';
+
+            hideEl(inputAmountPlayers);
+        }
     }
 }
